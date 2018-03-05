@@ -13,8 +13,10 @@ const FormItem = Form.Item;
 const api = new API();
 
 class Login extends Component{
-	constructor(props) {  
-        super(props);  
+	constructor(props) {  //props可以根据是否需要再传入
+     
+        super(props);  //若不调用，则this无法初始化
+
         this.state = {
         	username: '',
         	userpwd: ''
