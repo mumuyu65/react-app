@@ -12,21 +12,31 @@ const FormItem = Form.Item;
 
 const api = new API();
 
+const eventsArr = [
+    'doLogin',
+    'usernameChange',
+    'userpwdChange'
+];
+
 class Login extends Component{
+    //constructor() === Component.prototype.constructor.call(this,props)
 	constructor(props) {  //props可以根据是否需要再传入
-     
+
         super(props);  //若不调用，则this无法初始化
 
         this.state = {
         	username: '',
         	userpwd: ''
         };
-        this.doLogin = this.doLogin.bind(this);
 
-        this.usernameChange = this.usernameChange.bind(this);
-
-        this.userpwdChange = this.userpwdChange.bind(this);
+        this.setBindFunc();
     }
+
+    setBindFunc() {
+        eventsArr.forEach(ev => {
+            this[ev] = this[ev].bind(this);
+        })
+    };
 
     //组件存在期  组件已存在时的状态改变
     componentWillReceiveProps(){
@@ -70,10 +80,11 @@ class Login extends Component{
                 password:that.state.userpwd,
             };
 
+            /*
             window.localStorage.setItem('users',JSON.stringify(params));
             that.props.history.push("/index");
-
-            /*
+            */
+            
             api.login(params).then(function(res){
                 if(res.status === 200 || res.status === '200'){
                     window.localStorage.setItem('users',JSON.stringify(res.data));
@@ -82,7 +93,6 @@ class Login extends Component{
                     alert(res.msg);
                 }
             });
-            */
           }
         });
     }
