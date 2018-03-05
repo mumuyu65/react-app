@@ -16,8 +16,8 @@ class Login extends Component{
 	constructor(props) {  
         super(props);  
         this.state = {
-        	username: 'ptptpt',
-        	userpwd: '000000'
+        	username: '',
+        	userpwd: ''
         };
         this.doLogin = this.doLogin.bind(this);
 
@@ -26,21 +26,30 @@ class Login extends Component{
         this.userpwdChange = this.userpwdChange.bind(this);
     }
 
-    componentWillMount(){
-        this.setState({
-            username:'ptptpt',
-            userpwd: '000000'
-        });
-
-        console.log(this.refs.userName);
-
-        let users = window.localStorage.getItem('users');
-
-        if(users){
-            this.props.history.push('/index');
-        }
+    //组件存在期  组件已存在时的状态改变
+    componentWillReceiveProps(){
+        console.log('componentWillReceiveProps');
     }
 
+    shouldComponentUpdate(){
+        console.log('shouldComponentUpdate');
+        return true;
+    }
+
+    componentWillUpdate(){
+        console.log('componentWillUpdate');
+    }
+
+    componentDidUpdate(){
+        console.log('componentDidUpdate');
+    }
+
+    //组件销毁&清理期
+    componentWillUnmount(){
+        console.log('componentWillUnmount');
+    }
+
+    //监听组件中的事件
     usernameChange(e){
     	this.setState({username:e.target.value});
     }
@@ -58,16 +67,40 @@ class Login extends Component{
                 username:that.state.username,
                 password:that.state.userpwd,
             };
+
+            window.localStorage.setItem('users',JSON.stringify(params));
+            that.props.history.push("/index");
+
+            /*
             api.login(params).then(function(res){
-                if(res.status == 200 || res.status == '200'){
+                if(res.status === 200 || res.status === '200'){
                     window.localStorage.setItem('users',JSON.stringify(res.data));
                     that.props.history.push("/index"); 
                 }else{
                     alert(res.msg);
                 }
             });
+            */
           }
         });
+    }
+
+
+    //实例化完成后的更新
+    componentWillMount(){
+        console.log('componentWillMount');
+    }
+
+    componentDidMount(){
+        let users = window.localStorage.getItem('users');
+        if(users){
+            let initValue = JSON.parse(users);
+            //设置初始值
+            this.props.form.setFieldsValue({
+                username:initValue.username,
+                userpwd:initValue.password
+            }); 
+        }  
     }
 
  	render() {
